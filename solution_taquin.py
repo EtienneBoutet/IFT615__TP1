@@ -51,8 +51,9 @@ def AEtoile(start, isGoal, transitions, heuristique, cost):
 
         for transition in transitions(aeTuple.etat):
             transition_cost = cost(aeTuple)
-            transition = AEtoileTuple(transition, transition_cost + heuristique(transition), aeTuple)
-            if transition in closed or transition in open and transition.f < transition_cost + heuristique(transition.etat):
+            h = heuristique(transition)
+            transition = AEtoileTuple(transition, transition_cost + h, aeTuple)
+            if transition in closed or transition in open and transition.f < transition_cost + h:
                 continue
 
             open.append(transition)
