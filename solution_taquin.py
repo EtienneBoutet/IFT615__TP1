@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #####
-# Étienne Boutet (boue2327)
 # Raphael Valois (valr2802)
+# Étienne Boutet (boue2327)
 ###
 
 # Utiliser dbg() pour faire un break dans votre code.
