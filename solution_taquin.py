@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import numpy as np
 #####
 # Étienne Boutet (boue2327)
 # Raphael Valois (valr2802)
