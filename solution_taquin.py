@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-
+import numpy as np
 #####
-# VotreNom (VotreMatricule) .~= À MODIFIER =~.
+# Étienne Boutet (boue2327)
+# Raphael Valois (valr2802)
 ###
 
 # Utiliser dbg() pour faire un break dans votre code.
@@ -30,9 +31,37 @@ class AEtoileTuple:
     def __ne__(self, autre):
         return not (self == autre)
 
+def construct_path(aEtoileTuple):
+    parent = aEtoileTuple.parent
+    path = [aEtoileTuple.etat]
+    while parent is not None:
+        path.append(parent.etat)
+        parent = parent.parent
+
+    return path[::-1]
 
 def AEtoile(start, isGoal, transitions, heuristique, cost):
-    return [start]
+    open = [AEtoileTuple(start, heuristique(start), None)]
+    closed = []
+    while len(open) > 0:
+        aeTuple = open.pop(0)
+        closed.append(aeTuple)
+
+        if isGoal(aeTuple.etat):
+            return construct_path(aeTuple)
+
+        for transition in transitions(aeTuple.etat):
+            transition_cost = cost(aeTuple)
+            transition = AEtoileTuple(transition, transition_cost + heuristique(transition), aeTuple)
+            if transition in closed or transition in open and transition.f < transition_cost + heuristique(transition.etat):
+                continue
+
+            open.append(transition)
+
+        open.sort(key=lambda o: o.f, reverse=False)
+    return None
+
+
 #
 # joueur_taquin : Fonction qui calcule le chemin, suite d'états, optimal afin de complété
 #                  le puzzle.
@@ -51,8 +80,9 @@ def AEtoile(start, isGoal, transitions, heuristique, cost):
 # retour: Cette fonction retourne la liste des états de la solution triés en ordre chronologique
 #          c'est-à-dire de l'état initial jusqu'à l'état final inclusivement.
 #
-
-
 def joueur_taquin(etat_depart, fct_estEtatFinal, fct_transitions, fct_heuristique):
-    def fct_cout(x, y): return 1
+    def fct_cout(y):
+        cost = y.f - fct_heuristique(y.etat)
+        return cost + 1
+
     return AEtoile(etat_depart, fct_estEtatFinal, fct_transitions, fct_heuristique, fct_cout)
