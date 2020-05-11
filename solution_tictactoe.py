@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 #####
-# VotreNom (VotreMatricule) .~= À MODIFIER =~.
+# Étienne Boutet (boue2327)
+# Raphael Valois (valr2802)
 ###
 
 from pdb import set_trace as dbg  # Utiliser dbg() pour faire un break dans votre code.
 
 import random
 import numpy as np
+
 
 ########################
 # Solution tic-tac-toe #
@@ -31,12 +33,46 @@ import numpy as np
 # retour: Cette fonction retourne l'action optimal à joueur pour le joueur actuel c.-à-d. 'str_joueur'.
 ###
 
+class Alpha_beta_tuple:
+    def __init__(self, action, valeur):
+        self.action = action
+        self.valeur = valeur
 
-def joueur_tictactoe(etat,fct_but,fct_transitions,str_joueur):
 
-    #TODO: Implémenter un joueur alpha-beta
+def joueur_tictactoe(etat, fct_but, fct_transitions, str_joueur):
 
-    # Retourne une action aléatoire (.~= À MODIFIER =~.)
+    def alpha_beta_pruning(etat, estMaximiseur, alpha, beta):
+        if len(fct_transitions(etat)) == 0:
+            return Alpha_beta_tuple(None, fct_but(etat))
 
-    action = random.choice(list(fct_transitions(etat)))
-    return action
+        if estMaximiseur:
+            maxTuple = Alpha_beta_tuple(None, float('-inf'))
+            for action, nouvel_etat in fct_transitions(etat).items():
+                tuple = Alpha_beta_tuple(action, alpha_beta_pruning(nouvel_etat, False, alpha, beta).valeur)
+
+                if tuple.valeur > maxTuple.valeur:
+                    maxTuple = tuple
+
+                alpha = max(alpha, maxTuple.valeur)
+                if beta <= alpha:
+                    break
+            return maxTuple
+        else:
+            minTuple = Alpha_beta_tuple(None, float('inf'))
+            for action, nouvel_etat in fct_transitions(etat).items():
+                tuple = Alpha_beta_tuple(action, alpha_beta_pruning(nouvel_etat, True, alpha, beta).valeur)
+
+                if tuple.valeur < minTuple.valeur:
+                    minTuple = tuple
+
+                beta = min(beta, minTuple.valeur)
+                if beta <= alpha:
+                    break
+            return minTuple
+
+    if str_joueur == 'X':
+        tuple = alpha_beta_pruning(etat, True, float('-inf'), float('inf'))
+    else:
+        tuple = alpha_beta_pruning(etat, False, float('-inf'), float('inf'))
+
+    return tuple.action
