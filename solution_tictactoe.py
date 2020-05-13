@@ -42,7 +42,7 @@ class Alpha_beta_tuple:
 def joueur_tictactoe(etat, fct_but, fct_transitions, str_joueur):
 
     def alpha_beta_pruning(etat, estMaximiseur, alpha, beta):
-        if len(fct_transitions(etat)) == 0:
+        if fct_but(etat) is not None:
             return Alpha_beta_tuple(None, fct_but(etat))
 
         if estMaximiseur:
@@ -54,7 +54,8 @@ def joueur_tictactoe(etat, fct_but, fct_transitions, str_joueur):
                     maxTuple = tuple
 
                 alpha = max(alpha, maxTuple.valeur)
-                if beta <= alpha:
+
+                if alpha >= beta:
                     break
             return maxTuple
         else:
@@ -66,7 +67,8 @@ def joueur_tictactoe(etat, fct_but, fct_transitions, str_joueur):
                     minTuple = tuple
 
                 beta = min(beta, minTuple.valeur)
-                if beta <= alpha:
+
+                if alpha >= beta:
                     break
             return minTuple
 
